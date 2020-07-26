@@ -1,4 +1,4 @@
-# first-nuxt
+# nuxt-blog
 
 ## Build Setup
 
