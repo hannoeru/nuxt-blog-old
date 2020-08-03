@@ -1,26 +1,23 @@
 <template>
-  <Articles :posts="posts" />
+  <main class="w-full">
+    <ArticleList :articles="articles" />
+  </main>
 </template>
 
 <script>
-import { createClient } from '../plugins/contentful'
-const client = createClient()
-
 export default {
-  async asyncData({ params }) {
-    // 記事一覧を取得
-    const entries = await client.getEntries({
-      content_type: process.env.CTFL_CONTENT_TYPE_POST,
-      order: '-sys.createdAt',
-    })
-    return {
-      posts: entries.items,
+  async asyncData({ app, params, store }) {
+    if (!store.state.wp.articles.length) {
+      await store.dispatch('wp/getArticles')
     }
   },
   data() {
-    return {
-      posts: [],
-    }
+    return {}
+  },
+  computed: {
+    articles() {
+      return this.$store.state.wp.articles
+    },
   },
 }
 </script>
