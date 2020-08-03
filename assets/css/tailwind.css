@@ -1,3 +1,46 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+#content h2 {
+  @apply text-2xl ml-2 pl-6 mt-12 mb-8;
+}
+#content h3 {
+  @apply text-xl ml-4 pl-6 mt-10 mb-6;
+}
+#content h4 {
+  @apply text-lg ml-6 pl-6 mt-8 mb-4;
+}
+#content h2,
+#content h3,
+#content h4 {
+  @apply relative leading-tight font-semibold;
+}
+#content h2::before,h4::before {
+  @apply rounded-full w-2 bg-teal-400;
+}
+#content h3::before {
+  @apply rounded-full w-2 bg-purple-400;
+}
+#content h2::before,
+#content h3::before,
+#content h4::before {
+  content: '';
+  @apply absolute h-full left-0 mr-1;
+}
+#content p {
+  @apply px-10 text-lg font-light mt-6;
+}
+#content strong {
+  @apply font-semibold;
+}
+#content ul {
+  @apply px-10 text-lg font-light mb-2;
+}
+#content li::before {
+  content: "•";
+  @apply inline-block text-2xl font-black text-purple-400 mr-2;
+}
+#content li:nth-child(even)::before {
+  @apply text-teal-400;
+}
