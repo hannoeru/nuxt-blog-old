@@ -1,56 +1,89 @@
 <template>
-  <nuxt-link :to="`/posts/${article.sys.id}`">
-    <section
-      class="flex p-3 lg:p-6 rounded-lg bg-white bg-opacity-75 mb-3 shadow-sm"
+  <nuxt-link :to="'/' + article.slug">
+    <article
+      class="flex flex-col lg:flex-row rounded-lg bg-white shadow-lg overflow-hidden text-left mt-4"
     >
-      <div class="relative img overflow-hidden rounded-lg shadow-xl w-1/3">
-        <img
-          class="h-full w-full absolute object-cover"
-          :src="article.fields.thumbnail.fields.file.url"
-          alt=""
-        />
+      <div
+        class="relative lg:h-56 h-40 w-full lg:w-1/3 lg:m-4 lg:rounded-lg lg:shadow-lg overflow-hidden"
+      >
+        <img class="obsolute h-full w-full object-cover" :src="img" alt="" />
       </div>
-      <div class="inner ml-4 lg:ml-10 my-auto w-2/3">
+      <div class="px-6 py-4 lg:w-2/3 lg:my-auto">
         <div
-          class="inline bg-purple-400 rounded-sm px-1 lg:px-2 py-px lg:py-1 text-white text-xs lg:text-sm font-semibold"
+          class="inline bg-purple-400 rounded-sm px-1 lg:px-2 py-px lg:py-1 text-white text-xs font-base"
         >
-          {{ article.fields.category }}
+          {{ category }}
         </div>
-        <h2 class="mt-1 lg:mt-4 text-md md:text-xl lg:text-2xl font-medium">
-          {{ article.fields.title }}
-          tetd hoi hoih oho h hoh o
-        </h2>
-        <p class="mt-2 lg:mt-4 text-gray-500 w-2/3 md:block hidden">
-          {{ article.fields.description }} so i and have so many fun haha that
-          you know what i am talking about so is that too long?
-        </p>
-        <div class="mt-1 lg:mt-4 text-gray-600 text-xs lg:text-base">
-          <span>{{ article.sys.updatedAt.split('T')[0] }}</span>
+        <h3 class="text-lg font-semibold text-gray-800 mt-2">
+          {{ decode(article.title.rendered) }}
+        </h3>
+        <div class="text-gray-600 mt-1 overflow-hidden txt">
+          {{ decode(excerpt) }}
+        </div>
+        <div class="mt-3">
+          <span href="#" class="text-indigo-500 font-semibold text-sm">{{
+            date
+          }}</span>
         </div>
       </div>
-    </section>
+    </article>
   </nuxt-link>
 </template>
 
 <script>
+import he from 'he'
 export default {
   name: 'ArticleRow',
   props: {
     article: {
       type: Object,
-      default: null,
+      required: true,
+      default: () => {
+        return {
+          img: 'xxx',
+          category: {
+            name: 'Test Category',
+          },
+          title: {
+            randered: 'Title',
+          },
+          excerpt: {
+            randered: '2020-02-01',
+          },
+        }
+      },
+    },
+  },
+  computed: {
+    date() {
+      return this.article.date_gmt.split('T')[0]
+    },
+    img() {
+      return this.article._embedded['wp:featuredmedia'][0].media_details.sizes
+        .full.source_url
+    },
+    excerpt() {
+      return this.article.excerpt.rendered.substring(
+        3,
+        this.article.excerpt.rendered.length - 5
+      )
+    },
+    category() {
+      return this.article._embedded['wp:term'][0][0].name
+    },
+  },
+  methods: {
+    decode(str) {
+      return he.decode(str)
     },
   },
 }
 </script>
 
-<style scoped>
-.img {
-  width: 25vw;
-  height: 25vw;
-  max-width: 220px;
-  max-height: 220px;
-  min-width: 100px;
-  min-height: 100px;
+<style>
+.txt {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 </style>
